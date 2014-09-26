@@ -8,7 +8,9 @@ module Main (
 ) where
 
 import System.IO
+import System.Environment
 import Lexer
+import Tokens
 
 {-|
    Funci�n principal.
@@ -20,10 +22,14 @@ import Lexer
 main :: IO ()
 
 main =
-	do
-		fileName <- getFilename
-		contents <- readFile fileName
-		print $ lexer contents
+  do
+    args <- getArgs
+
+    if length args /= 1
+      then error "\nError: El programa debe ejecutarse con un argumento de la forma: ./triniy <NombreArchivo>\n"
+      else do
+      contents <- readFile $ head args
+      putStr $ unlines $ map show $ lexer contents
 
 {-
    getFilename
@@ -39,8 +45,8 @@ main =
 -}
 
 getFilename =
-	do
-		hSetBuffering stdout NoBuffering
-		putStr "Archivo a Interpretar: "
-		fileName <- getLine
-		return fileName
+  do
+    hSetBuffering stdout NoBuffering
+    putStr "Archivo a Interpretar: "
+    fileName <- getLine
+    return fileName
