@@ -18,10 +18,10 @@ El ejecutable se guardara en la ruta: /home/<usuario>/.cabal/bin/trinity
 ---
 Historia:
 Entrega 1: Analizador Lexicográfico. 26/09/2014.
-	   Archivos:
-	   	   Lexer.x
-	   	   trinity.hs
-		   Tokens.hs
-	   	   Readme.md
-		   trinity.cabal
+	Archivos:
+		Lexer.x
+	  trinity.hs
+		Tokens.hs
+    Readme.md
+    trinity.cabal
 	   
