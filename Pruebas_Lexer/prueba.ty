@@ -37,3 +37,9 @@ hol
 b\\n"
 "hol \\\n \\ a \\\" \" \n \\n#42"
 "Hello world!\nA string inside a string: \"this is so \\meta\"";
+"\"
+" \\ x \" "
+"         \\ x \" "
+" \\     x     \" "
+" \\ x \"         "
+"\\x\""

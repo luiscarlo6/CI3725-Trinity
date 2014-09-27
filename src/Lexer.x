@@ -1,27 +1,35 @@
 {
 {-|
-	Este m�dulo, desarrollado en Alex, implanta un Analizador
-	Lexicogr�fico para la calculadora vista en clase. Sirve como
-	ejemplo de uso tanto para Alex como para Haddock.
+  Module : Lexer
+  Copyright : Universidad Simón Bolívar
+  Maintainer : Luiscarlo Rivera (09-11020)
+               & Traductores e Interpretadores (CI-3725)
+               Entrega: Proyecto # 1
+  Este módulo, desarrollado en Alex, implanta un Analizador
+  Lexicográfico para el lenguaje Trinity.
 
 -}
 module Lexer (
+  -- * Tipos exportados
   AlexPosn(..),
   -- * Funciones exportadas.
   -- ** Analizador Lexicográfico.
   lexer
   ) where
+
 import Tokens
+
 }
 
 %wrapper "posn"
 
-$digito = 0-9           -- UN digito
-$letra  = [a-zA-Z]      -- UNA letra
+$digito  = 0-9           -- UN digito
+$letra   = [a-zA-Z]      -- UNA letra
 $alfanum = [a-zA-Z0-9]  -- UN digito o letra
-@string = \"(($printable # [\"\\]) | \\[\"n\\])*\"
-@numero  = $digito+(\.$digito+)?
-@identificador = $letra[$alfanum \_]*
+@string  = \"(($printable # [\"\\]) | \\[\"n\\])*\"
+@float   = $digito+(\.$digito+)?
+@int     = $digito+
+@ident   = $letra[$alfanum \_]*
 
 tokens :-
   --Espacios en blanco y comentarios
@@ -73,10 +81,11 @@ tokens :-
   do       { \p s -> TkDo    (getPos p) }
 
   --literales
-  false    { \p s -> TkFalse (getPos p)                 }
-  true     { \p s -> TkTrue  (getPos p)                 }
-  @numero  { \p s -> TkNum   (getPos p) s (read s)      }
-  @string  { \p s -> TkStr   (getPos p) $ tail (init s) }
+  false   { \p s -> TkFalse (getPos p)                 }
+  true    { \p s -> TkTrue  (getPos p)                 }
+  @int    { \p s -> TkNum   (getPos p) s (read (s++".0"))     }
+  @float  { \p s -> TkNum   (getPos p) s (read s)      }
+  @string { \p s -> TkStr   (getPos p) $ tail (init s) }
 
   --operaciones numéricas
   \+       { \p s -> TkPlus  (getPos p) }
@@ -109,16 +118,21 @@ tokens :-
   \<\=           { \p s -> TkLEqT (getPos p) }
 
   --Identificadores
-  @identificador { \p s -> TkIdent (getPos p) s }
+  @ident { \p s -> TkIdent (getPos p) s }
 
   --Error
-  .              { \p s -> TkError (getPos p) s }
+  .      { \p s -> TkError (getPos p) s }
 
 {
+-- | Recibe un @String@ que va a ser analizado con la funcion
+-- @alexScanTokens y devuelve una lista con los @Token@ encontrados.
+-- También están los errores encontrados.
 lexer :: String -> [Token] 
 lexer s = alexScanTokens s
 
-
+-- | A partir de un tipo @AlexPosn@, retorna una tupla
+-- con los numeros @f@ y @c@ que representan las filas
+-- y columnas.
 getPos :: AlexPosn -> (Int,Int)
 getPos (AlexPn _ f c) = (f,c)
 

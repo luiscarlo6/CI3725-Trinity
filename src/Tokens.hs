@@ -3,21 +3,22 @@
   Copyright   : Universidad Simón Bolívar
   Maintainer  : Luiscarlo Rivera (09-11020) 
 	        & Traductores e Interpretadores (CI-3725) 
-
+                Entrega: Proyecto # 1
   Módulo que contiene la definición del tipo @Tokens@, con sus
   constructores, según la especificación del lenjuaje @Trinity@.
 -}
 module Tokens (
   -- * Tipos exportados
-  -- ** Tokens
+  -- ** Token
   Token (..)
   ) where
-{- El tipo de datos @Token@ modela los diferentes /Tokens/ que se pueden 
-   encontrar en el lenguaje 2Trinity. Todos los /Tokens/ contienen información
+
+{- |
+   El tipo de datos @Token@ modela los diferentes @Tokens@ que se pueden 
+   encontrar en el lenguaje @Trinity@. Todos los @Tokens@ contienen información
    acerca de la fila y columna donde fué encontrado, en forma de tupla (f,c).
-   En los casos en que sea necesaria información extra - por ejemplo TkNum, del
-   cual nos interesa saber además de su posición, cuál es el número que se 
-   representa (Lo mismo pasa con el String) - se añade un parámetro extra para 
+   En los casos en que sea necesaria información extra, por ejemplo TkNum, del
+   cual nos interesa saber algo además de su posición, se añade un parámetro extra para 
    su almacenamiento.
 
    El tipo de datos @Token@ se declara derivando de @Show@ para que
@@ -25,8 +26,9 @@ module Tokens (
    que al invocar la función @yylex@ la lista producida será presentada
    directamente en pantalla.
 
-   El tipo de datos @Token@ Se declara derivando de @Eq@ y @Show@ para facilitar el uso de
-   este tipo de datos en futuras implementaciones que lo utilicen.
+   El tipo de datos @Token@ Se declara derivando de @Eq@ para facilitar el uso de
+   este tipo de datos en futuras implementaciones que lo utilicen,
+   y se crea la instancia @Show@ para mostrar una información más completa.
 -}
 data Token =
   -- Palabras reservadas del Lenguaje
@@ -97,7 +99,7 @@ data Token =
   deriving(Eq)
 
 
-
+-- | Instancia @Show@ para Token
 instance Show Token where
   show tok =
     case tok of
@@ -125,9 +127,9 @@ instance Show Token where
      TkFunction  (f,c)     -> format f c "Palabra reservada: function"
      TkReturn    (f,c)     -> format f c "Palabra reservada: return" 
      -- Operadores y elementos sintácticos
-     TkSemicolon (f,c)     -> format f c "Separador de instrucciones \";\""
-     TkColon     (f,c)     -> format f c "Separador de filas \":\""
-     TkComma     (f,c)     -> format f c "Separador de columnas \",\""
+     TkSemicolon (f,c)     -> format f c "Punto y coma \";\""
+     TkColon     (f,c)     -> format f c "Dos puntos \":\""
+     TkComma     (f,c)     -> format f c "Coma \",\""
      TkAsig      (f,c)     -> format f c "Asignación \"=\""
      TkEqT       (f,c)     -> format f c "Comparador de igualdad \"=\""
      TkNEqT      (f,c)     -> format f c "Comparador de desigualdad \"/=\""
@@ -159,10 +161,13 @@ instance Show Token where
      TkCExMod    (f,c)     -> format f c "Operador cruzado resto exacto de la división \".%.\""
      TkCDiv      (f,c)     -> format f c "Operador cruzado división entera \".div.\""
      TkCMod      (f,c)     -> format f c "Operador cruzado resto entero de la división \".mod.\""
+
+     -- Tokens con información adicional
      TkIdent     (f,c) s   -> format f c $ "Identificador: "++s
      TkNum       (f,c) s _ -> format f c $ "Literal numérico: "++s
      TkStr       (f,c) s   -> format f c $ "Literal de cadena de caracteres: \""++s++"\""
-     TkError     (f,c) s   -> format f c $ "Error caracter inesperado: "++s
+     TkError     (f,c) s   -> format f c $ "ERROR: caracter inesperado: "++s
 
+-- | Da un formato adecuado al @String@ de @Show@ según los requerimientos
 format :: Int -> Int -> String -> String
-format f c s = s ++ ", Fila:"++(show f)++", Columna:"++(show c)++".\n"
+format f c s = "F:"++(show f)++"|C:"++(show c)++", "++s

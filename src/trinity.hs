@@ -1,9 +1,13 @@
-{-|
-	 Programa Principal para el interpretador 
-
- -}
+{-| 
+  Module      : Main
+  Copyright   : Universidad Simón Bolívar
+  Maintainer  : Luiscarlo Rivera (09-11020) 
+	        & Traductores e Interpretadores (CI-3725) 
+                Entrega: Proyecto # 1
+  Módulo que implementa el programa principal del Analizador Lexicografico para el lenguaje @Trinity@.
+-}
 module Main (
-	-- * Funci�n Principal.
+  -- * Función Principal.
   main
 ) where
 
@@ -13,40 +17,16 @@ import Lexer
 import Tokens
 
 {-|
-   Funci�n principal.
+   Función principal.
 
-   El programa puede ser compilado para su ejecuci�n directa,
-   o bien cargado en el interpretador GHCi e invocado a trav�s
-   de la funci�n @main@.
+   Debe ser invocado de la forma: ./trinity <Archivo_de_entrada>
  -}
 main :: IO ()
-
 main =
   do
     args <- getArgs
-
     if length args /= 1
-      then error "\nError: El programa debe ejecutarse con un argumento de la forma: ./triniy <NombreArchivo>\n"
+      then error "\nError: El programa debe ejecutarse con un argumento de la forma: ./triniy <Archivo_de_entrada>\n"
       else do
       contents <- readFile $ head args
       putStr $ unlines $ map show $ lexer contents
-
-{-
-   getFilename
-
-	 Funci�n auxiliar para obtener el nombre del archivo a procesar.
-	 Presenta un prompt en pantalla para que el usuario introduzca
-	 el nombre del archivo que desea procesar y espera a que se
-	 suministre una l�nea de texto. Esa l�nea de texto es retornada.
-
-	 Note que la documentaci�n de esta funci�n NO aparecer� generada
-	 en Haddock pues se trata de una funci�n auxiliar no exportada
-	 por el m�dulo.
--}
-
-getFilename =
-  do
-    hSetBuffering stdout NoBuffering
-    putStr "Archivo a Interpretar: "
-    fileName <- getLine
-    return fileName
