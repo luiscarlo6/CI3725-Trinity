@@ -19,8 +19,8 @@ Herramientas:
 Uso:
 
 1. Para compilar se usa la herramienta `cabal`.
-2. En la carpeta principal ejecutar el comando: cabal install.
-3. El ejecutable se guardará en la ruta: /home/[usuario]/.cabal/bin/trinity
+2. En la carpeta principal ejecutar el comando: `cabal install`.
+3. El ejecutable se guardará en la ruta: `/home/[usuario]/.cabal/bin/trinity`
 
 ---
 
